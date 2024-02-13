@@ -1,0 +1,8 @@
+- grammar from 2020 contains too many nuances
+  - was 2020 scm2js multi-pass or single pass?
+  - attempt was made to show the development of the grammar, to handle backquote, then quote
+- need to review OhmInSmallSteps to see what the final version was
+- new version probably needs to
+  - rewrite backquote
+  - rewrite quote
+  - parse simple non-quoted source

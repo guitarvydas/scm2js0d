@@ -1,0 +1,1315 @@
+;; from OhmSmallSteps / index.html
+
+<!doctype html>
+<html>
+  <head>
+    <title>ohm/js in small steps</title>
+    <meta charset=utf-8>
+    <script src="/Users/tarvydas/projects/ohm/examples/lib.js"></script>
+    <script src="/Users/tarvydas/projects/ohm/dist/ohm.js"></script>
+    <script type="text/test-form">
+      (#t #f)
+    </script>
+
+    <!-- test xyz --->
+    <script type=text/test-simple>
+xyz
+    </script>
+    
+    <script type="text/test-form">
+      ( #t #f . #t)
+    </script>
+    
+    <script type="text/test-form">
+      ( . #t)
+    </script>
+    
+    <script type="text/test-form">
+      asymbol
+    </script>
+    
+    <script type="text/test-form">
+      (asymbol)
+    </script>
+
+    <script type="text/test-form">
+      (asymbol1 asymbol2)
+    </script>
+
+    <script type="text/test-fail">
+      (define asymbol10)
+    </script>
+
+    <!-- global var -->
+    <script type="text/test-all">
+      (define asymbol11 asymbol12)
+    </script>
+
+    <script type="text/test-fail">
+      (define (asymbol13 asymbol14))
+    </script>
+
+    <!-- top level define -->
+    <script type="text/test-all">
+      (define (asymbol15 asymbol16) 5)
+    </script>
+
+
+    <!-- top level function define -->
+    <script type="text/test>
+      (define (x15 x16) x17)
+    </script>
+
+    <script type="text/test-all">
+      (define (x18 x19) (x20))
+    </script>
+
+
+    <!-- form -->
+    <script type="text/test-all">
+      (asymbol1a asymbol2a)
+      (asymbol3 asymbol4)
+    </script>
+
+
+    <!-- top level call -->
+    <script type="text/test-all">
+      (prove5 '() goals db empty 1)
+    </script>
+
+    <!-- top level function define  -->
+    <script type="text/test-all">
+      (define (funNoFormals) 1)
+    </script>
+
+    <script type="text/test-form">
+      'asymbol5
+    </script>
+
+    <script type="text/test-form">
+      ('(asymbol6 asymbol7))
+    </script>
+
+    <script type="text/test-bq">
+      `a
+    </script>
+
+    <script type="text/test-bq">
+      `,b
+    </script>
+
+    <script type="text/test-bq">
+      `(c)
+    </script>
+    <script type="text/test-bq">
+      `(d e f)
+    </script>
+    <script type="text/test-bq">
+      `(g ,h i)
+    </script>
+
+    <script type="text/test-cond">
+(define (unify1 x y e)
+  (let ((x (value x e))
+        (y (value y e)))
+    (cond
+      ((eq? x y) e))
+))
+    </script>
+
+    <script type="text/test-cond">
+(define (unify2 x y e)
+  (let ((x (value x e))
+        (y (value y e)))
+    (cond
+      ((eq? x y) e)
+      ((var? x) (bind x y e))
+      ((var? y) (bind y x e))
+      ((or (not (pair? x))
+           (not (pair? y))) #f)
+      (else
+        (let ((e* (unify (car x) (car y) e)))
+          (and e* (unify (cdr x) (cdr y) e*)))))))
+    </script>
+
+    <script type="text/test-hold">
+(define (prove6 l g r e n c)
+  (cond
+    ((null? g)
+      (print-frame e)
+      (back6 l g r e n c))
+    ((eq? '! (car g))
+      (clear_r c)
+      (prove6 c (cdr g) r e n c))
+    ((eq? 'r! (car g))
+      (prove6 l (cddr g) r e n (cadr g)))
+    ((null? r)
+      (if (null? l)
+          #t
+          (back6 l g r e n c)))
+    (else
+      (let* ((a  (copy (car r) n))
+             (e* (unify (car a) (car g) e)))
+        (if e*
+            (prove6 (link l g r e n c)
+                    (append (cdr a) `(r! ,l) (cdr g))
+                    db
+                    e*
+                    (+ 1 n)
+                    l)
+            (back6 l g r e n c))))))
+    </script>
+
+    <script type="text/test-all">
+(define goals '((some (? X))
+                (some (? Y))
+                (neq (? X) (? Y))))
+    </script>
+
+<!-- newlist -->
+    <script type="text/test-all"> 
+(define g '((a)))
+    </script>
+
+<!-- newlist -->
+    <script type="text/test-all">
+(define g '(a))
+    </script>
+
+<!-- newlist -->
+    <script type="text/test-all">
+(define g '(a b))
+    </script>
+
+<!-- newlist -->
+    <script type="text/test-all">
+(define g '())
+    </script>
+
+<!-- function atom -->
+    <script type="text/test-all">
+(define g a)
+    </script>
+
+<!-- function atom -->
+    <script type="text/test-all">
+(define g 42)
+    </script>
+
+<!-- function atom -->
+    <script type="text/test-all">
+(define g "abc")
+    </script>
+
+<!-- function atom -->
+    <script type="text/test-all">
+(define g #t)
+    </script>
+
+<!-- function call -->
+    <script type="text/test-all">
+(define g (a b c))
+    </script>
+
+<!-- branching and -->
+    <script type="text/test-all">
+(define h (and a b c))
+    </script>
+    <script type="text/test-all">
+(define andTest (and a b c))
+    </script>
+    <script type="text/test-all">
+(define testand (and a b c))
+    </script>
+
+<!-- branching or -->
+    <script type="text/test-all">
+(define h (or a b c))
+    </script>
+
+<!-- not -->
+    <script type="text/test-all">
+(define i (not a))
+    </script>
+
+<!-- if then else -->
+    <script type="text/test-all">
+(define ifThenElseTest (if a b c))
+    </script>
+
+<!-- if then -->
+    <script type="text/test-all">
+(define ifThenTest (if a b))
+    </script>
+
+<!-- cond -->
+    <script type="text/test-all">
+(define condTestWElse (cond (a b c) (d e f) (else g)))
+    </script>
+
+<!-- cond -->
+    <script type="text/test-all">
+(define condTestWOElse (cond (a b c) (d e f)))
+    </script>
+
+<!-- let -->
+    <script type="text/test-all">
+(define letTest (let ((a b) (c d)) X))
+    </script>
+
+<!-- let* -->
+    <script type="text/test-all">
+(define letStarTest (let* ((a b) (c d)) X))
+    </script>
+
+
+<!-- quote -->
+    <script type="text/test-all">
+(define quoteTest (quote abc))
+    </script>
+
+<!-- quote -->
+    <script type="text/test-all">
+(define quoteTest (quote #t))
+    </script>
+
+<!-- quote -->
+    <script type="text/test-all">
+(define quoteTest (quote #f))
+    </script>
+
+<!-- quote -->
+    <script type="text/test-all">
+(define quoteTest (quote 123))
+    </script>
+
+<!-- quote -->
+    <script type="text/test-all">
+(define quoteTest (quote "string"))
+    </script>
+
+<!-- symbol macro -->
+    <script type="text/test-all">
+(define L_l car)
+    </script>
+
+<!-- symbol macro -->
+    <script type="text/test-all">
+(L_1 a)
+    </script>
+
+<!-- symbol macro -->
+    <script type="text/test-hold">
+(L_1 '(a b c))
+    </script>
+
+<!-- define revisited -->
+    <script type="text/test-all" -->
+(define goals '((path a f (? P))))
+    </script>
+
+<!-- define revisited -->
+    <script type="text/test-all" -->
+(define L_l car)
+    </script>
+
+<!-- define revisited -->
+    <script type="text/test-all" -->
+(define v '?)
+    </script>
+<!-- define revisited -->
+    <script type="text/test-all" -->
+(define name cadr)
+    </script>
+
+</script>
+<!-- prolog-6 top level 1 -->
+    <script type="text/test-hold">
+(define (try g r e n)
+  (if nn
+      #f
+      (let ((a  (copy (car r) (list n)))
+             (ne (unify (car g) (car a) e)))
+        (if ne
+            (prove3 (append (cdr a) (cdr g)) ne (+ 1 n)))
+        (try g (cdr r) e n))))
+    </script>
+
+<!-- prolog-6 top level 2 -->
+    <script type="text/test-a" -->
+(define (fn) (cond ((a) (b) (c)) (else (d))))
+    </script>
+    <script type="text/test-b" -->
+(define (fn) (cond ((a) (b) (c)) ((d) (e) (f)) (else (g))))
+    </script>
+    <script type="text/test-c" -->
+(define db
+  '(((edge a b))
+    ((edge a f))
+    ((edge a g))
+    ((edge b c))
+    ((edge b d))
+    ((edge c d))
+    ((edge c e))
+    ((edge g h))
+    ((edge d h))
+    ((edge h e))
+    ((edge h f))
+
+    ((path (? A) (? B) ((? A) (? B)))
+     (edge (? A) (? B)))
+
+    ;((path (? A) (? B) ((? A) . (? CB)))
+    ((path (? A) (? B) ((? A) (? CB)))
+     (edge (? A) (? C))
+     (path (? C) (? B) (? CB)))))
+    </script>
+    <script type="text/test" -->
+(define db
+  '(5))
+    </script>
+    <script type="text/test" -->
+(define db
+  '(sym))
+    </script>
+    <script type="text/test" -->
+(define db
+  '("string"))
+    </script>
+    <script type="text/test" -->
+(define db
+  '(#f))
+    </script>
+    <script type="text/test" -->
+(define db
+  '(#t))
+    </script>
+    <script type="text/test" -->
+(define db
+  '())
+    </script>
+    <script type="text/test-d" -->
+(define db
+  '(((edge a b))
+))
+    </script>
+<!-- prolog-6.scm -->
+    <script type="text/test-prolog-6">
+(define (try g r e n)
+  (if (null? r)
+      #f
+      (let* ((a  (copy (car r) (list n)))
+             (ne (unify (car g) (car a) e)))
+        (if ne
+            (prove3 (append (cdr a) (cdr g)) ne (+ 1 n)))
+        (try g (cdr r) e n))))
+
+(define (prove3 g e n)
+  (cond ((null? g)
+          (print-frame e))
+        (else
+          (try g db e n))))
+
+
+(define link list)
+(define L_l car)
+(define L_g cadr)
+(define L_r caddr)
+(define L_e cadddr)
+(define (L_n x) (car (cddddr x)))
+
+
+(define (back5 l g r e n)
+  (if (and (pair? g)
+           (pair? r))
+      (prove5 l g (cdr r) e n)
+      (prove5 (L_l l)
+              (L_g l)
+              (cdr (L_r l))
+              (L_e l)
+              (L_n l))))
+
+
+(define (prove5 l g r e n)
+  (cond
+    ((null? g)
+      (print-frame e)
+      (back5 l g r e n))
+    ((null? r)
+      (if (null? l)
+          #t
+          (back5 l g r e n)))
+    (else
+      (let* ((a  (copy (car r) n))
+             (e* (unify (car a) (car g) e)))
+        (if e*
+            (prove5 (link l g r e n)
+                    (append (cdr a) (cdr g))
+                    db
+                    e*
+                    (+ 1 n))
+            (back5 l g r e n))))))
+
+
+(define (L_c x) (cadr (cddddr x)))
+
+
+(define (clear_r x)
+  (set-car! (cddr x) '(())))
+
+
+(define (back6 l g r e n c)
+  (cond
+    ((and (pair? g)
+          (pair? r))
+      (prove6 l g (cdr r) e n c))
+    ((pair? l)
+      (prove6 (L_l l)
+              (L_g l)
+              (cdr (L_r l))
+              (L_e l)
+              (L_n l)
+              (L_c l)))))
+
+
+(define (prove6 l g r e n c)
+  (cond
+    ((null? g)
+      (print-frame e)
+      (back6 l g r e n c))
+    ((eq? '! (car g))
+      (clear_r c)
+      (prove6 c (cdr g) r e n c))
+    ((eq? 'r! (car g))
+      (prove6 l (cddr g) r e n (cadr g)))
+    ((null? r)
+      (if (null? l)
+          #t
+          (back6 l g r e n c)))
+    (else
+      (let* ((a  (copy (car r) n))
+             (e* (unify (car a) (car g) e)))
+        (if e*
+            (prove6 (link l g r e n c)
+                    (append (cdr a) `(r! ,l) (cdr g))
+                    db
+                    e*
+                    (+ 1 n)
+                    l)
+            (back6 l g r e n c))))))
+
+
+(define empty '((bottom)))
+
+(define var '?)
+(define name cadr)
+(define time cddr)
+
+(define (var? x)
+  (and (pair? x)
+       (eq? var (car x))))
+
+(define (lookup v e)
+  (let ((id (name v))
+        (t  (time v)))
+    (let loop ((e e))
+      (cond ((not (pair? (caar e)))
+              #f)
+            ((and (eq? id (name (caar e)))
+                  (eqv? t (time (caar e))))
+              (car e))
+            (else
+              (loop (cdr e)))))))
+
+(define (value x e)
+  (if (var? x)
+      (let ((v (lookup x e)))
+        (if v
+            (value (cadr v) e)
+            x))
+      x))
+
+(define (copy x n)
+  (cond
+    ((not (pair? x)) x)
+    ((var? x) (append x n))
+    (else
+      (cons (copy (car x) n)
+            (copy (cdr x) n)))))
+
+(define (bind x y e)
+  (cons (list x y) e))
+
+(define (unify x y e)
+  (let ((x (value x e))
+        (y (value y e)))
+    (cond
+      ((eq? x y) e)
+      ((var? x) (bind x y e))
+      ((var? y) (bind y x e))
+      ((or (not (pair? x))
+           (not (pair? y))) #f)
+      (else
+        (let ((e* (unify (car x) (car y) e)))
+          (and e* (unify (cdr x) (cdr y) e*)))))))
+
+
+(define (resolve x e)
+  (cond ((not (pair? x)) x)
+        ((var? x)
+          (let ((v (value x e)))
+            (if (var? v)
+                v
+                (resolve v e))))
+        (else
+          (cons
+            (resolve (car x) e)
+            (resolve (cdr x) e)))))
+
+;; (define (print-frame e)
+;;   (newline)
+;;   (let loop ((ee e))
+;;     (cond ((pair? (cdr ee))
+;;             (cond ((null? (time (caar ee)))
+;;                     (display (cadaar ee))
+;;                     (display " = ")
+;;                     (display (resolve (caar ee) e))
+;;                     (newline)))
+;;             (loop (cdr ee))))))
+
+;; manually rewritten version w/o named let
+(define (print-frame-loop ee)
+  (if (pair? (cdr ee))
+      (let ()
+	(if (null? (time (caar ee)))
+	    (let ()
+	      (display (cadaar ee))
+	      (display " = ")
+	      (display (resolve (caar ee) e))
+	      (neline)))
+	(print-frame-loop (cdr ee)))))
+
+(define (print-frame e)
+  (newline)
+  (print-frame-loop e))
+;; end manually rewritten version w/o named let
+
+
+;; Graph example from section 1
+
+(define db
+  '(((edge a b))
+    ((edge a f))
+    ((edge a g))
+    ((edge b c))
+    ((edge b d))
+    ((edge c d))
+    ((edge c e))
+    ((edge g h))
+    ((edge d h))
+    ((edge h e))
+    ((edge h f))
+
+    ((path (? A) (? B) ((? A) (? B)))
+     (edge (? A) (? B)))
+
+    ((path (? A) (? B) ((? A) . (? CB)))
+     (edge (? A) (? C))
+     (path (? C) (? B) (? CB)))))
+
+(define goals '((path a f (? P))))
+
+; recursive PROVE
+(prove3 goals empty 1)
+
+; 6-slide PROVE
+(prove5 '() goals db empty 1)
+
+;; Negation as failure
+
+(define db
+  '(((some foo))
+    ((some bar))
+    ((some baz))
+
+    ((eq (? X) (? X)))
+
+    ((neq (? X) (? Y))
+     (eq (? X) (? Y)) ! fail)
+
+    ((neq (? X) (? Y)))))
+
+(define goals '((some (? X))
+                (some (? Y))
+                (neq (? X) (? Y))))
+
+; 9-slide PROVE
+(prove6 '() goals db empty 1 '())
+
+
+    </script>
+
+
+
+
+    <script type="text/ohm-js">
+WSGrammar0 {
+  SyntacticRule = "xy" "z"
+  SyntacticRule2 = "xy" ~alnum "z"
+  lexicalRule = "xy" "z"
+}
+    </script>
+    <script type="text/ohm-js">
+WSGrammar1 {
+  SyntacticRule = "(" "xy" "z"
+  SyntacticRule2 = "(" "xy" ~alnum "z"
+  lexicalRule = "(" "xy" "z"
+}
+    </script>
+    <script type="text/ohm-js">
+WSGrammar {
+  SyntacticRule = "xy" "z"
+  lexicalRule = "xy" "z"
+  SyntacticRule2 = "xy" ~alnum "z"
+}
+    </script>
+
+    <script type="text/ohm-js">
+
+// pass 1 grammar
+
+      // An Ohm grammar for Scheme, step 1.
+Scm2JSBasic {
+  Program = Form+
+  Form = SList | Atom
+  QuotedSexp = "'" Form
+  BackQuotedSexp = "`" Form
+  CommaSexp = "," Form
+  SList = DottedList | NullTerminatedList
+  DottedList = "(" ListItem+ "." ListItem ")"
+  NullTerminatedList =   "(" ListItem* ")"
+  ListItem = (Atom | SList)
+  Atom = lexical_atom | Syntactic_Atom
+  Syntactic_Atom = QuotedSexp | BackQuotedSexp | CommaSexp
+
+  lexical_atom = lexical_integer | lexical_symbol | lexical_string | lexical_boolean
+  lexical_boolean = "#f" | "#t"
+  lexical_integer = lexical_numchar+
+  lexical_numchar = "0".."9"
+  lexical_string = "\"" (~"\"" any)+ "\""
+  lexical_symbol = lexical_letchar (lexical_letchar | lexical_numchar)*
+  lexical_letchar = lexical_lc | lexical_uc | "+" | "*" | "!" | "?"  | "_" | "-"
+  lexical_lc = "a".."z"
+  lexical_uc = "A".."Z"
+  semiColonComment = ";" (~"\n" any)* "\n"
+  space += semiColonComment
+}
+</script>
+
+
+    <script type="text/ohm-js">
+
+// grammar for ListConstant pattern matching
+
+Scm2JSListConstants <: Scm2JSBasic {
+  SList := DottedList | ListConstant | NullTerminatedList
+  ListConstant = "(" lexical_QUOTE QNullTerminatedList ")"
+  lexical_QUOTE = space* "quote" space*
+  QNullTerminatedList =   "(" QListItem* ")"
+  QListItem = QAtom | QSList
+  QSList = DottedList | QNullTerminatedList 
+  QAtom = QAtomicSymbol | QAtomicNonSymbol
+  QAtomicNonSymbol = lexical_integer | lexical_string | lexical_boolean
+  QAtomicSymbol = lexical_symbol
+}
+</script>
+
+
+    <script type="text/ohm-js">
+
+// Emitter grammar
+//Scm2JSEmitter <: Scm2JSBasic {
+// see https://ohmlang.github.io/editor/
+
+Scm2JSEmitter {
+  Program = (GlobalVariableDefinition | GlobalFunctionDefinition | TopLevelFunctionCall)+
+  Form = SList | Atom
+  QuotedSexp = "'" Form
+  BackQuotedSexp = "`" Form
+  CommaSexp = "," Form
+  DottedList = "(" ListItem+ "." ListItem ")"
+  NullTerminatedList =   "(" ListItem* ")"
+  ListItem = (Atom | SList)
+  Atom = lexical_atom | Syntactic_Atom
+  Syntactic_Atom = QuotedSexp | BackQuotedSexp | CommaSexp
+
+  lexical_atom = lexical_integer | lexical_symbol | lexical_string | lexical_boolean
+  lexical_boolean = "#f" | "#t"
+  lexical_integer = lexical_numchar+
+  lexical_numchar = "0".."9"
+  lexical_string = "\"" (~"\"" any)+ "\""
+  lexical_symbol = lexical_letchar (lexical_letchar | lexical_numchar)*
+  lexical_letchar = lexical_lc | lexical_uc | "+" | "*" | "!" | "?"  | "_" | "-"
+  lexical_lc = "a".."z"
+  lexical_uc = "A".."Z"
+  semiColonComment = ";" (~"\n" any)* "\n"
+  space += semiColonComment
+
+
+  SList =   BEGIN lexical_AtNewListAt ListItem* END -- atnewlistat
+           | SpecialForm 
+           | FunctionCall
+           | NullTerminatedList
+           | DottedList 
+
+  SpecialForm = QuotedExpression | CondExpression | LetExpression | IfThenElseExpression | IfThenExpression | AndExpression | OrExpression | NotExpression
+
+
+  CondExpression = CondExpressionWithElse | CondExpressionWithoutElse
+  CondExpressionWithElse = BEGIN lexical_COND FirstCondClause MoreCondClause CondElseClause END
+  CondExpressionWithoutElse = BEGIN lexical_COND FirstCondClause MoreCondClause END
+    
+  FirstCondClause = CondClause
+  MoreCondClause = CondClause*
+  CondClause = BEGIN ~lexical_ELSE CondTest CondStatementBlock END
+
+  CondTest = Form
+
+  CondElseClause = BEGIN lexical_ELSE CondStatementBlock END
+
+  CondStatementBlock = StatementBlock
+
+  StatementBlock = Atom | SequentialStatement
+  SequentialStatement = MidStatement* LastStatement
+  MidStatement = Statement &Statement
+  LastStatement = Statement ~Statement
+  Statement = Form
+
+
+
+  LetExpression = LetSequential | LetParallel
+
+  LetSequential = BEGIN lexical_LETSTAR LetBindings LetBody END
+  LetParallel = BEGIN lexical_LET LetBindings LetBody END
+
+  LetBindings = BEGIN Binding+ END
+  Binding = BEGIN LetVar LetBindingClause END
+  LetVar = lexical_symbol
+  LetBindingClause = Form
+  LetBody = StatementBlock
+    
+
+  IfThenElseExpression = BEGIN lexical_IF IfTestExpr ThenPart ElsePart END
+  IfThenExpression = BEGIN lexical_IF IfTestExpr ThenPart END
+  IfTestExpr = Form
+  ThenPart = Form
+  ElsePart = Form
+
+  AndExpression = BEGIN lexical_AND Bool+ END
+  OrExpression = BEGIN lexical_OR Bool+ END
+  NotExpression = BEGIN lexical_NOT Bool END
+  Bool = Form
+
+
+  FunctionCall = BEGIN Identifier Arg* END
+  Identifier = ~Keyword lexical_symbol
+  Arg = ListItem
+
+
+  GlobalFunctionDefinition = BEGIN lexical_DEFINE BEGIN Identifier Identifier* END StatementBlock END
+    
+  GlobalVariableDefinition = BEGIN lexical_DEFINE Identifier Form END
+  TopLevelFunctionCall = FunctionCall
+
+
+  BEGIN = "("
+  END = ")"
+
+  QuotedExpression = QuotedSymbol | QuotedOther
+  QuotedSymbol = BEGIN lexical_QUOTE lexical_symbol END
+  QuotedOther = BEGIN lexical_QUOTE (lexical_integer | lexical_string | lexical_boolean) END
+
+
+  Keyword =   lexical_DEFINE
+            | lexical_COND 
+            | lexical_IF
+            | lexical_LET
+            | lexical_LETSTAR
+            | lexical_AtNewListAt 
+            | lexical_AND | lexical_OR | lexical_NOT
+            | lexical_ELSE
+            | lexical_QUOTE
+
+  lexical_AND = "and" ~alnum space*
+  lexical_OR = "or" ~alnum space*
+  lexical_NOT = "not" ~alnum space*
+  lexical_AtNewListAt = "@newList@" ~alnum space*
+  lexical_DEFINE = "define" ~alnum space*
+  lexical_IF = "if" ~alnum space*
+  lexical_COND = "cond" ~alnum space*
+  lexical_ELSE = "else" ~alnum space*
+  lexical_LETSTAR = "let*" ~alnum space*
+  lexical_LET = "let" ~alnum space*
+  lexical_QUOTE = "quote" ~alnum space*
+}
+
+
+      /*
+        see https://stackoverflow.com/questions/31909121/how-does-the-named-let-in-the-form-of-a-loop-work
+	for a description of named Let in Scheme.  From the above,
+
+(define (number->list n)
+  (let loop ((n n)
+             (acc '()))
+    (if (< n 10)
+        (cons n acc)
+        (loop (quotient n 10)
+              (cons (remainder n 10) acc)))))
+
+becomes...
+
+(define (number->list n)
+  (define (loop n acc)
+    (if (< n 10)
+        (cons n acc)
+        (loop (quotient n 10)
+              (cons (remainder n 10) acc))))
+  (loop n '()))
+
+(i.e "loop" becomes a function in the scope of the main function "number->list")
+
+in JS
+/* in JS:
+
+function number_to_list(n) {
+    var loop = function (n acc) {
+	return (n < 10) ? cons(n acc) : loop(remainder(n acc), acc)
+    };
+    loop(n, new List());
+}
+*/
+    </script>
+
+
+
+
+    <script>
+
+      var g_namespace = ohm.grammarsFromScriptElements();
+      var ws_grammar = g_namespace["WSGrammar"];
+      var pass1_grammar = g_namespace["Scm2JSBasic"];
+      var listConstants_grammar = g_namespace["Scm2JSListConstants"];
+      var emitter_grammar = g_namespace["Scm2JSEmitter"];
+
+      var tests = document.querySelectorAll('script[type="text/test"]');
+
+      function toListOfStrings(a) {
+	  return a.join(' ');
+      }
+      
+      function toBranchingAnd(a) {
+	  return a.join(' && ');
+      }
+      
+      function toBranchingOr(a) {
+	  return a.join(' || ');
+      }
+      
+      function toPackedString(a) {
+	  return a.join('');
+      }
+      
+
+// pass1 semantics
+
+      var pass1_semantics = pass1_grammar.createSemantics();
+      
+      pass1_semantics.addOperation(
+	  'unity',
+	  {
+	      Program: function(tree) {return toListOfStrings(tree.unity())},
+	      Form: function(item) {return item.unity()},
+	      QuotedSexp: function(_, form) {return "'" + form.unity()},
+	      BackQuotedSexp: function(_, form) {return "`" + form.unity()},
+	      CommaSexp: function(_, form) {return "," + form.unity()},
+	      SList: function(lis) {return lis.unity()},
+	      DottedList: function(_lp, items, _dot, lastItem, _rp) {
+		  return "(" + toListOfStrings(items.unity()) + " . " + lastItem.unity() + ")"},
+	      NullTerminatedList: function(_lp, items, _rp) {
+		  return "(" + toListOfStrings(items.unity()) + ")"},
+	      ListItem: function(item) {return item.unity()},
+	      Atom: function(a) {return a.unity()},
+	      lexical_integer: function(ns) {return toPackedString(ns.unity());},
+	      lexical_symbol: function(c, cs) {return c.unity() + toPackedString(cs.unity());},
+	      lexical_string: function(_q1, chars, _q2) {return "\"" + toPackedString(chars.unity()) + "\""},
+	      lexical_letchar: function(c) {return c.unity()},
+	      lexical_numchar: function(c) {return c.unity()},
+	      lexical_lc: function(c) {return c.unity()},
+	      lexical_uc: function(c) {return c.unity()},
+
+	      lexical_boolean: function(b) {return this.sourceString},
+	      _terminal: function() { return this.primitiveValue; }
+	  }
+      );
+      
+
+          pass1_semantics.addOperation(
+	  'unquote',
+	  {
+	      Program: function(tree) {return toListOfStrings(tree.unquote())},
+	      Form: function(item) {return item.unquote()},
+	      QuotedSexp: function(_, form) {return "(quote " + form.unquote() + ")"},
+	      BackQuotedSexp: function(_, form) {return "`" + form.unquote()},
+	      CommaSexp: function(_, form) {return "," + form.unquote()},
+	      SList: function(lis) {return lis.unquote()},
+	      DottedList: function(_lp, items, _dot, lastItem, _rp) {
+		  return "(" + toListOfStrings(items.unquote()) + " . " + lastItem.unquote() + ")"},
+	      NullTerminatedList: function(_lp, items, _rp) {
+		  return "(" + toListOfStrings(items.unquote()) + ")"},
+	      ListItem: function(item) {return item.unquote()},
+	      Atom: function(a) {return a.unquote()},
+	      lexical_integer: function(ns) {return toPackedString(ns.unquote());},
+	      lexical_symbol: function(c, cs) {return c.unquote() + toPackedString(cs.unquote());},
+	      lexical_string: function(_q1, chars, _q2) {return "\"" + toPackedString(chars.unquote()) + "\""},
+	      lexical_letchar: function(c) {return c.unquote()},
+	      lexical_numchar: function(c) {return c.unquote()},
+	      lexical_lc: function(c) {return c.unquote()},
+	      lexical_uc: function(c) {return c.unquote()},
+
+	      lexical_boolean: function(b) {return this.sourceString},
+	      _terminal: function() { return this.primitiveValue; }
+	  }
+      );
+
+
+
+          pass1_semantics.addOperation(
+	  'unbackquote',
+	  {
+	      Program: function(tree) {return toListOfStrings(tree.unbackquote())},
+	      Form: function(item) {return item.unbackquote()},
+	      QuotedSexp: function(_, form) {return "(quote " + form.unbackquote() + ")"},
+	      BackQuotedSexp: function(_, form) {return form.inbackquote();},
+	      CommaSexp: function(_, form) {throw "can\'t happen - comma not inside backquote - (actually, not necessarily the case, but nested backquotes left as an exercise for the reader)"},
+	      SList: function(lis) {return lis.unbackquote()},
+	      DottedList: function(_lp, items, _dot, lastItem, _rp) {
+		  return "(" + toListOfStrings(items.unbackquote()) + " . " + lastItem.unbackquote() + ")"},
+	      NullTerminatedList: function(_lp, items, _rp) {
+		  return "(" + toListOfStrings(items.unbackquote()) + ")"},
+	      ListItem: function(item) {return item.unbackquote()},
+	      Atom: function(a) {return a.unbackquote()},
+	      lexical_integer: function(ns) {return toPackedString(ns.unbackquote());},
+	      lexical_symbol: function(c, cs) {return c.unbackquote() + toPackedString(cs.unbackquote());},
+	      lexical_string: function(_q1, chars, _q2) {return "\"" + toPackedString(chars.unbackquote()) + "\""},
+	      lexical_letchar: function(c) {return c.unbackquote()},
+	      lexical_numchar: function(c) {return c.unbackquote()},
+	      lexical_lc: function(c) {return c.unbackquote()},
+	      lexical_uc: function(c) {return c.unbackquote()},
+
+	      lexical_boolean: function(b) {return this.sourceString},
+	      _terminal: function() { return this.primitiveValue; }
+	  }
+      );
+      
+          pass1_semantics.addOperation(
+	  'inbackquote',
+	  {
+	      Program: function(tree) {throw "can\'t happen"},
+	      Form: function(item) {return item.inbackquote()},
+	      QuotedSexp: function(_, form) {return "(quote " + form.inbackquote() + ")"},
+	      BackQuotedSexp: function(_, form) {throw "can\'t happen - left as exercise to the reader";},
+	      CommaSexp: function(_, form) {return form.unity()}, // use unbackquote to get eval'ed value
+	      SList: function(lis) {return lis.inbackquote()},
+	      DottedList: function(_lp, items, _dot, lastItem, _rp) {
+		  return "(list " + toListOfStrings(items.inbackquote()) + " . " + lastItem.inbackquote() + ")"},
+	      NullTerminatedList: function(_lp, items, _rp) {
+		  return "(list " + toListOfStrings(items.inbackquote()) + ")"},
+	      ListItem: function(item) {return item.inbackquote()},
+	      Atom: function(a) {return a.inbackquote()},
+	      lexical_integer: function(ns) {return toPackedString(ns.inbackquote());},
+	      lexical_symbol: function(c, cs) {return "(quote " + c.inbackquote() + toPackedString(cs.inbackquote()) + ")";},
+	      lexical_string: function(_q1, chars, _q2) {return "\"" + toPackedString(chars.inbackquote()) + "\""},
+	      lexical_letchar: function(c) {return c.inbackquote()},
+	      lexical_numchar: function(c) {return c.inbackquote()},
+	      lexical_lc: function(c) {return c.inbackquote()},
+	      lexical_uc: function(c) {return c.inbackquote()},
+
+	      lexical_boolean: function(b) {return this.sourceString},
+	      _terminal: function() { return this.primitiveValue; }
+	  }
+      );
+      
+////////
+
+// listConstants semantics
+      var listConstants_semantics = listConstants_grammar.createSemantics();
+
+      listConstants_semantics.addOperation(
+	  'listConstants',
+	  {
+	      Program: function(tree) {return toListOfStrings(tree.listConstants())},
+	      Form: function(item) {return item.listConstants()},
+	      QuotedSexp: function(_, form) {return "'" + form.listConstants()},
+	      BackQuotedSexp: function(_, form) {return "`" + form.listConstants()},
+	      CommaSexp: function(_, form) {return "," + form.listConstants()},
+	      SList: function(lis) {return lis.listConstants();},
+	      DottedList: function(_lp, items, _dot, lastItem, _rp) {
+		  return "(" + toListOfStrings(items.listConstants()) + " . " + lastItem.listConstants() + ")"},
+              ListConstant: function(_lp,_quote,listItem,_rp) { return "(@newList@ " + listItem.listConstants() + ")"; },
+
+              QNullTerminatedList: function(_lp,qitem,_rp) { return toListOfStrings(qitem.listConstants()); },
+              QListItem: function(item) { return item.listConstants(); },
+              QSList: function(slist) { return "(@newList@ " + slist.listConstants() + ")"; },
+              QAtom: function(a) { return a.listConstants(); },
+              QAtomicNonSymbol: function(a) { return a.listConstants(); },
+              QAtomicSymbol: function(a) { return '"' + a.listConstants() + '"'; },
+
+	      NullTerminatedList: function(_lp, items, _rp) {
+		  return "(" + toListOfStrings(items.listConstants()) + ")"},
+	      ListItem: function(item) {return item.listConstants()},
+	      Atom: function(a) {return a.listConstants()},
+	      lexical_integer: function(ns) {return toPackedString(ns.listConstants());},
+	      lexical_symbol: function(c, cs) {return c.listConstants() + toPackedString(cs.listConstants());},
+	      lexical_string: function(_q1, chars, _q2) {return "\"" + toPackedString(chars.listConstants()) + "\""},
+	      lexical_letchar: function(c) {return c.listConstants()},
+	      lexical_numchar: function(c) {return c.listConstants()},
+	      lexical_lc: function(c) {return c.listConstants()},
+	      lexical_uc: function(c) {return c.listConstants()},
+
+	      lexical_boolean: function(b) {return this.sourceString},
+	      _terminal: function() { return this.primitiveValue; }
+	  }
+      );
+      
+
+
+
+// emitter semantics
+      var emitter_semantics = emitter_grammar.createSemantics();
+
+      emitter_semantics.addOperation(
+	  'emitjs',
+	  {
+	      Program: function(listOfForms) {return toListOfStrings(listOfForms.emitjs())},
+              Arg: function(a) {return a.emitjs();},
+
+              Form: function(item) {return item.emitjs()},
+	      SList: function(lis) {return lis.emitjs()},
+              SList_atnewlistat: function(_begin,_at,items,_end) { return "(function(){return new List(" + items.emitjs() + ");})"; },
+
+              SpecialForm: function(e) { return e.emitjs(); },
+
+	      // CondExpression contains CondClauses (optional else clause)
+	      // CondClause contains Statements
+	      //
+	      // the first clause is emitted with "if"
+	      // subsequent (more) clauses are emitted with "} else if "
+	      //
+	      // statements are emitted suffixed by ':'
+	      // last statement is emitted as ' return ... ; '
+	      //
+              CondExpression: function(c){ return c.emitjs(); },
+              CondExpressionWithElse : function(_begin,_cond,firstClause,moreClauses,elseClause,_end) {
+                  return "(function(){" + firstClause.emitjs() + moreClauses.emitjs() + elseClause.emitjs() + "})()" ; },
+              CondExpressionWithoutElse : function(_begin,_cond,firstClause,moreClauses,_end) {
+                  return "(function(){"+ firstClause.emitjs() + moreClauses.emitjs() + " else " + "{ return null; }" + "})()" ; },
+
+              FirstCondClause: function(c) { return "if " + c.emitjs(); },
+              MoreCondClause: function(c) { 
+		  //console.log('c ' + c.toString());
+		  //console.log('node(raw)    ' + c._node);
+		  //console.log('node(string) ' + c._node.toString());
+                  //console.log('node(nChild) ' + c._node.numChildren());
+		  if (c._node.numChildren() == 0) {
+		      return "";
+		  } else {
+		      return " else if " + c.emitjs();
+		  }
+	      },
+	      CondClause: function(_begin,ctest,block,_end) {return "(" + ctest.emitjs() + ") {" +  block.emitjs() + "}"; },
+
+	      CondTest: function(f) { return f.emitjs(); },
+	      CondElseClause: function(_begin,_else,block,_end){ return "else {" + block.emitjs() + "}"; },
+
+              CondStatementBlock: function(sb) { return sb.emitjs(); },
+
+	      StatementBlock: function(atomOrSequential) { return atomOrSequential.emitjs(); },
+              SequentialStatement: function(midStatements, lastStatement) {
+		  return toListOfStrings(midStatements.emitjs()) + lastStatement.emitjs()},
+              MidStatement: function(s,_lookahead) { if (s._node.numChildren() > 0) {return s.emitjs() + ";" ;} else {return "";}},
+              LastStatement: function(s) { return "return " + s.emitjs() + ";" ;},
+              Statement: function(f) { return f.emitjs() ;},
+
+	      LetExpression: function(e) { return e.emitjs(); },
+              LetSequential: function(_begin,_letstar,bindings,body,_end) {
+		  return "(function(" + bindings.emitjs() + ") {"+ body.emitjs() + "})()"},
+              LetParallel: function(_begin,_let,bindings,body,_end) {
+		  return "(function(" + bindings.emitjs() + ") {"+ body.emitjs() + "})()"},
+
+              LetBindings: function(_begin,bindings,_end) { return bindings.emitjs(); },
+              Binding: function(_begin,v,e,_end) { return v.emitjs() + "=" + e.emitjs(); },
+              LetVar: function(id) {return id.emitjs(); },
+              LetBindingClause: function(e) { return e.emitjs(); },
+
+	      
+              IfThenElseExpression: function(_begin,_if,e,thenPart,elsePart,_end) {
+                  return "(function(){ if (" + e.emitjs() + ") {return " + thenPart.emitjs() + ";} else {return " + elsePart.emitjs() + ";}})()";
+              },
+
+              IfThenExpression: function(_begin,_if,e,thenPart,_end) {
+                  return "(function(){ if (" + e.emitjs() + ") {return " + thenPart.emitjs() + ";} else {" + "  return null;" + "}})()";
+              },
+
+              ThenPart: function(b) { return b.emitjs(); },
+              ElsePart: function(b) { return b.emitjs(); },
+
+              AndExpression: function(_begin,_and,booleans,_end) {
+		  return "(function(){if" + toBranchingAnd(booleans.emitjs()) + " { return true; } else { return false; }))()"; },
+              OrExpression: function(_begin,_and,booleans,_end) {
+		  return "(function(){if" + toBranchingOr(booleans.emitjs()) + " { return true; } else { return false; }))()"; },
+              NotExpression: function(_begin,_not,bool,_end) { return "!" + bool.emitjs(); },
+              Bool: function(form){return form.emitjs(); },
+
+
+              FunctionCall: function(_lp,id,actuals,_end) {return id.emitjs() + "(" + actuals.emitjs() + ")";},
+
+              GlobalFunctionDefinition: function(_begin,_define,_begin2,id,formals,_end2,body,_end) {
+		  return "function " + id.emitjs() + "(" + formals.emitjs() + ")" + " {" + body.emitjs() + "};<br>"; },
+
+              GlobalVariableDefinition: function(_begin,_define,id,form,_end) {
+		  return "var " + id.emitjs() + " = " + form.emitjs() + ";<br>";},
+              TopLevelFunctionCall: function(fn) {return fn.emitjs() + ";<br>";},
+	      
+
+
+	      DottedList: function(_lp, items, _dot, lastItem, _rp) { throw "can't happen (in this solution)"; },
+	      NullTerminatedList: function(_lp, items, _rp) {
+		  return toListOfStrings(items.emitjs()) ;},
+	      ListItem: function(item) {return item.emitjs()},
+
+	      Atom: function(a) {return a.emitjs() ;},
+
+	      QuotedExpression: function(x) {return x.emitjs();},
+	      QuotedSymbol: function(_lp,_q,sym,_rp){ return '"' + sym.emitjs() + '"'},
+	      QuotedOther: function(_lp,_q,sym,_rp){ return sym.emitjs()},
+              lexical_QUOTE: function(_quote,_sp) {return "";},
+
+              Identifier: function(id) {return id.emitjs();},
+              END: function(_rp) {return "";},
+     
+              lexical_IF: function(_if,_sp) { return ""; },
+              lexical_ELSE: function(_else,_sp) { return ""; },
+              lexical_AND: function(_and,_sp) {return "";},
+              lexical_OR: function(_or,_sp2) {return "";},
+              lexical_NOT: function(_not,_sp) {return "";},
+              lexical_AtNewListAt: function(_atnewlistat,_rp) { return "" ; },
+              lexical_DEFINE: function(_,sp2){return "";},
+              lexical_LETSTAR: function(_let,_sp2) { return ""; },
+              lexical_LET: function(_let,_sp2) { return ""; },
+              lexical_COND: function(_,_sp2){return "";},
+              lexical_ELSE: function(_,_sp2){return "";},
+
+
+	      lexical_integer: function(ns) {return toPackedString(ns.emitjs());},
+	      lexical_symbol: function(c, cs) {return c.emitjs() + toPackedString(cs.emitjs());},
+	      lexical_string: function(_q1, chars, _q2) {return "\"" + toPackedString(chars.emitjs()) + "\""},
+	      lexical_letchar: function(c) {return c.emitjs()},
+	      lexical_numchar: function(c) {return c.emitjs()},
+	      lexical_lc: function(c) {return c.emitjs()},
+	      lexical_uc: function(c) {return c.emitjs()},
+
+	      lexical_boolean: function(b) {return ("#f" == this.sourceString) ? "false" : "true"; },
+	      _terminal: function() { return this.primitiveValue; }
+	  }
+      );
+
+////////
+
+      var resultsString = '';
+      
+      function displayDate () {
+	  document.getElementById('timestamp').innerHTML = Date();
+      }
+
+      function doPipeline(testElement) {
+	  var testString = testElement.innerHTML;
+
+          var parsed_pass1 = pass1_grammar.match(testString);
+	  if (parsed_pass1.failed()) {
+	      resultsString = resultsString + "<br>pass1 parse *FAILED*<br>input:<br>" + testString;
+	      console.log(parsed_pass1.shortMessage);
+              console.log(parsed_pass1.getRightmostFailures());
+              console.log(parsed_pass1.getRightmostFailures().toString());
+	  } else {
+              var transpiled_pass1 = pass1_semantics(parsed_pass1).unbackquote();
+	      
+	      var parsed_listConstants = listConstants_grammar.match(transpiled_pass1);
+	      if (parsed_listConstants.failed()) {
+		  resultsString = resultsString + "<br>listConstants parse *FAILED*<br>";
+	      } else {		  
+		  var transpiled_listConstants = listConstants_semantics(parsed_listConstants).listConstants();
+		  
+		  // console.log( emitter_grammar.trace(transpiled_listConstants).toString() );
+		  var parsed_emitter = emitter_grammar.match(transpiled_listConstants);
+		  if (parsed_emitter.failed()) {
+		      resultsString = resultsString + "<br>emitter parse *FAILED*<br>";
+		  } else {
+		      var transpiled_emitter = emitter_semantics(parsed_emitter).emitjs();
+		      resultsString = resultsString + "<br>input:<br>" + testString + " ==><br><br>";
+		      resultsString = resultsString + "<br>listConstants:<br>" + transpiled_listConstants + " ==><br><br>";
+		      resultsString = resultsString + "<br>final:<br>" + transpiled_emitter;
+
+		      var debugParse = false; // use https://ohmlang.github.io/editor/
+		      if (debugParse) {
+			  var tr = emitter_grammar.trace(transpiled_listConstants);
+			  console.log(tr);
+			  console.log(tr.toString());
+		      }
+		  }
+	      }
+	  }
+      }
+
+      function displayTestResults(s,el) {
+	  document.getElementById(el).innerHTML = s;
+      }
+
+      function displayStringsEqual(s1,s2,el) {
+          document.getElementById(el).innerHTML = (s1 == s2);
+      }
+
+      function doReplacements(inputString) {
+	  var r = inputString.replace(/try/g,"_try")
+	      .replace(/null[?]/g,"null_Q_")
+	      .replace(/pair[?]/g,"pair_Q_")
+	      .replace(/[+]/g,"_plus")
+	      .replace(/[-]/g,"_D_")
+	  ;
+	  return r;
+      }
+      
+      function pipelinetest() {
+	  resultsString = '';
+	  //console.log(tests);
+	  tests.forEach(doPipeline);
+	  var str = doReplacements(resultsString);
+	  displayTestResults(str,'result');
+	  displayDate();
+      }
+
+</script>
+
+
+
+
+
+
+  </head>
+  <body>
+    <button onclick="pipelinetest()">Click me (pass1 & listConstants & emitter test)</button> -->
+    <!-- <button onclick="simpleTest()">Click me (simple test)</button> -->
+    <p id="timestamp"></p>
+    <p id="bool"></p>
+    <p id="result"></p>
+  </body>
+</html>
