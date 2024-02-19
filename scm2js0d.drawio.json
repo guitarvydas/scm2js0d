@@ -500,19 +500,6 @@
         ],
         "connections": [
             {
-                "dir": 0,
-                "source": {
-                    "name": "",
-                    "id": 0
-                },
-                "source_port": "input",
-                "target": {
-                    "name": "",
-                    "id": 4
-                },
-                "target_port": "output"
-            },
-            {
                 "dir": 3,
                 "source": {
                     "name": "",
